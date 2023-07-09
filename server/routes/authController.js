@@ -28,12 +28,38 @@ const registeruser = async (req, res) => {
         });
 
 
-
+        return res.json(user);
 } catch (error) {
-
+    console.log(error);
 }
+};
+
+const loginUser = (req, res)=>{
+    try{
+        const{email, password} = req.body;
+
+        const user = await User.findOne({email});
+        if(!user){
+            return res.json({
+                error:'No user found'
+            })
+        }
+
+        const match = await comparePassword(password, user.password)
+        if(match){
+            res.json({'password matched'})
+        }
+        if(!match) {
+            res.json({
+                error: 'Password do not match'
+            })
+        }
+    } catch (error){
+        console.log(error)}
+    }
 }
 
 module.exports = 
     test,
-    registeruser
+    registeruser,
+    loginUser
